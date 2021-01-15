@@ -14,6 +14,10 @@ def ads():
 	ads = getAllAds()
 	return render_template('users.html', ads=ads)
 
+@app.route('/dashboard')
+def dashboard():
+	return render_template('dashboard.html')
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	if request.method == 'POST':
@@ -42,7 +46,9 @@ def login():
 			isLog = toLog(user)
 			if isLog:
 				print(isLog)
-				return render_template('dashboard.html', user=isLog)
+				response = app.make_response(render_template('dashboard.html'))
+				response.headers['x-access-token'] = isLog
+				return response
 			else:
 				# Todo : Add error message
 				pass

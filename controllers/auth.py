@@ -32,3 +32,16 @@ def encode_auth_token(user):
         )
     except Exception as e:
         return e
+
+def decode_auth_token(token):
+    """
+    Decode and return payload from token
+    """
+    try:
+        return jwt.decode(
+            token,
+            keys.secret,
+            algorithm='HS256'
+        )
+    except Exception as e:
+        return e
