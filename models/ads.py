@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 from keys import keys
-from flask import Flask, render_template
 
 client = MongoClient()
 client = MongoClient(keys.mongodb['dbURI'])
