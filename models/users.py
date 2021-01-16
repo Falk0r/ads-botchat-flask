@@ -1,6 +1,6 @@
 from pymongo import MongoClient
 from keys import keys
-
+from controllers.auth import toLog
 client = MongoClient()
 client = MongoClient(keys.mongodb['dbURI'])
 
@@ -20,7 +20,6 @@ def findUser(email):
     Find one user with email
     """
     user = dbUsers.find_one({"email" : email})
-    print(user)
     return user
 
 def addUser(name, email, password):
@@ -31,7 +30,15 @@ def addUser(name, email, password):
         "name" : name,
         "email": email,
         "password" : password
-    })
+    }).inserted_id
     user
     print(user)
-    return user
+    if user:
+        newUser = {
+            "id" : str(user),
+            "name" : name,
+            "email" : email
+        }
+        return newUser
+    else:
+        return 'ERROR TO ADD USER'

@@ -1,9 +1,12 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, jsonify
+from flask_cors import CORS
 from models.ads import getAllAds
 from models.users import getAllUsers, findUser, addUser
 from controllers.auth import toLog
 
 app = Flask(__name__)
+
+CORS(app, resources={r'/*': {'origins': '*'}})
 
 @app.route('/')
 def hello():
@@ -21,15 +24,19 @@ def dashboard():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
 	if request.method == 'POST':
-		print(request.form['email'], request.form['password'], request.form['name'])
+		# print(request.form['email'], request.form['password'], request.form['name'])
+		print(request.get_json())
 		if (request.form['email'] and request.form['password'] and request.form['name']):
 			check = findUser(request.form['email'])
 			if (not check):
 				print("add an user")
 				addUser(request.form['name'], request.form['email'], request.form['password'])
+		else:
+			return jsonify('error !')
 
 		# Incorrect values
-		return redirect('/login', code=302, Response=None)
+		# return redirect('/login', code=302, Response=None)
+		return jsonify('error !')
 	else:
 		# Get route
 		print('redirection vers login')
@@ -57,6 +64,24 @@ def login():
 		pass
 	users = getAllUsers()
 	return render_template('login.html', users=users)
+
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+	if request.method == 'POST':
+		user = request.get_json()
+		print(user['name'])
+		if (user['name'] and user['email'] and user['password']):
+			check = findUser(user['email'])
+			if (not check):
+				newUser = addUser(user['name'], user['email'], user['password'])
+				print (newUser)
+				return jsonify(newUser)
+			else:
+				return jsonify('User Already exist')
+		else:
+			return jsonify('Data invalid')
+	else:
+		return jsonify('GET METHOD !')
 
 if __name__ == '__main__':
 	app.run()
