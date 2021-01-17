@@ -21,8 +21,8 @@ def ads():
 def dashboard():
 	return render_template('dashboard.html')
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
+@app.route('/old-register', methods=['GET', 'POST'])
+def old_register():
 	if request.method == 'POST':
 		# print(request.form['email'], request.form['password'], request.form['name'])
 		print(request.get_json())
@@ -42,8 +42,8 @@ def register():
 		print('redirection vers login')
 		return redirect('/login', code=302, Response=None)
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/old-login', methods=['GET', 'POST'])
+def old_login():
 	if request.method == 'POST':
 		if (request.form['email'] and request.form['password']):
 			user = {
@@ -65,8 +65,8 @@ def login():
 	users = getAllUsers()
 	return render_template('login.html', users=users)
 
-@app.route('/test', methods=['GET', 'POST'])
-def test():
+@app.route('/register', methods=['GET', 'POST'])
+def register():
 	if request.method == 'POST':
 		user = request.get_json()
 		print(user['name'])
@@ -80,6 +80,21 @@ def test():
 				return jsonify('User Already exist')
 		else:
 			return jsonify('Data invalid')
+	else:
+		return jsonify('GET METHOD !')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+	if request.method == 'POST':
+		user = request.get_json()
+		if (user['email'] and user['password']):
+			token = toLog(user)
+			if (token):
+				return jsonify({'Token': token, 'authenticated': True})
+			else:
+				return jsonify({'Message': 'Invalid credentials', 'authenticated': False}), 401
+		else:
+			return jsonify({'Message': 'Data invalid', 'authenticated': False}), 401
 	else:
 		return jsonify('GET METHOD !')
 

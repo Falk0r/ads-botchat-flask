@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 from keys import keys
-from controllers.auth import toLog
 client = MongoClient()
 client = MongoClient(keys.mongodb['dbURI'])
 
