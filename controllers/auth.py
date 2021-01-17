@@ -23,7 +23,7 @@ def encode_auth_token(user):
             'exp' : datetime.utcnow() + timedelta(hours=1),
             'iat' : datetime.utcnow(),
             'userName' : user['name'],
-            'userEmail' : user['email'] 
+            'userEmail' : user['email']
         }
         return jwt.encode(
             payload,
@@ -41,7 +41,7 @@ def decode_auth_token(token):
         return jwt.decode(
             token,
             keys.secret,
-            algorithm='HS256'
+            algorithms='HS256'
         )
     except Exception as e:
         return e

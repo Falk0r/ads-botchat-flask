@@ -1,8 +1,9 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_cors import CORS
-from models.ads import getAllAds
+import jwt
+from models.ads import getAllAds, addAd
 from models.users import getAllUsers, findUser, addUser
-from controllers.auth import toLog
+from controllers.auth import toLog, decode_auth_token
 
 app = Flask(__name__)
 
@@ -13,7 +14,7 @@ def hello():
 	return render_template('index.html')
 
 @app.route('/ads')
-def ads():
+def getads():
 	ads = getAllAds()
 	return render_template('users.html', ads=ads)
 
@@ -97,6 +98,58 @@ def login():
 			return jsonify({'Message': 'Data invalid', 'authenticated': False}), 401
 	else:
 		return jsonify('GET METHOD !')
+
+# Token Decorator for api routes
+def token_required(f):
+    # @wraps(f)
+    def _verify(*args, **kwargs):
+        auth_headers = request.headers.get('Authorization', '').split()
+
+        invalid_msg = {
+            'message': 'Invalid token. Registeration and / or authentication required',
+            'authenticated': False
+        }
+        expired_msg = {
+            'message': 'Expired token. Reauthentication required.',
+            'authenticated': False
+        }
+
+        if len(auth_headers) != 2:
+            return jsonify(invalid_msg), 401
+
+        try:
+            token = auth_headers[1]
+            data = decode_auth_token(token)
+            user = findUser(email=data['userEmail'])
+            if not user:
+                raise RuntimeError('User not found')
+            return f(user, *args, **kwargs)
+        except jwt.ExpiredSignatureError:
+            return jsonify(expired_msg), 401 # 401 is Unauthorized HTTP status code
+        except (jwt.InvalidTokenError, Exception) as e:
+            print(e)
+            return jsonify(invalid_msg), 401
+
+    return _verify
+
+# API ROUTING
+@app.route('/api/ads', methods=['GET', 'POST'])
+@token_required
+def ads(current_user):
+	if request.method == 'POST':
+		ad = request.get_json()
+		newAd = addAd(ad, current_user)
+		if newAd:
+			return jsonify({'message' : 'Ad created !'})
+		else:
+			return jsonify({'message' : 'Ad not created !'}), 500
+	else:
+		id = str(current_user['_id'])
+		ads = getAllAds(id)
+		print(id)
+		return jsonify(ads)
+
+
 
 if __name__ == '__main__':
 	app.run()
