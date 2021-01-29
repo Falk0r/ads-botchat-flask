@@ -1,7 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify
 from flask_cors import CORS
 import jwt
-from models.ads import getAllAds, addAd
+from models.ads import getAllAds, addAd, deleteAd
 from models.users import getAllUsers, findUser, addUser
 from controllers.auth import toLog, decode_auth_token
 
@@ -133,7 +133,7 @@ def token_required(f):
     return _verify
 
 # API ROUTING
-@app.route('/api/ads', methods=['GET', 'POST'])
+@app.route('/api/ads', methods=['GET', 'POST', 'DELETE'])
 @token_required
 def ads(current_user):
 	if request.method == 'POST':
@@ -143,6 +143,16 @@ def ads(current_user):
 			return jsonify({'message' : 'Ad created !'})
 		else:
 			return jsonify({'message' : 'Ad not created !'}), 500
+	elif request.method == 'DELETE':
+		ad = request.get_json()
+		print(current_user)
+		print(ad)
+		removeAd = deleteAd(ad, current_user)
+		if removeAd:
+			return jsonify({'message' : 'Ad deleted !'})
+		else:
+			return jsonify({'message' : 'Ad not deleted !'}), 500
+
 	else:
 		id = str(current_user['_id'])
 		ads = getAllAds(id)

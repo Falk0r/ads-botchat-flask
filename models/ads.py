@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from keys import keys
+from bson import ObjectId
 
 client = MongoClient()
 client = MongoClient(keys.mongodb['dbURI'])
@@ -29,6 +30,21 @@ def addAd(ad, user):
     }).inserted_id
     newAd
     if newAd:
+        return True
+    else:
+        return False
+
+def deleteAd(ad, user):
+    """
+    Delete an ad for the ID's user
+    """
+    removeAd = dbAds.delete_one({
+        "user" : str(user["_id"]),
+        "_id" : ObjectId(ad)
+    })
+    removeAd
+    print(removeAd)
+    if removeAd:
         return True
     else:
         return False
