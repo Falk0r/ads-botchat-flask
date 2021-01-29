@@ -36,7 +36,7 @@ def addAd(ad, user):
 
 def deleteAd(ad, user):
     """
-    Delete an ad for the ID's user
+    Delete an ad for the ID's user and ID's ad
     """
     removeAd = dbAds.delete_one({
         "user" : str(user["_id"]),
@@ -45,6 +45,26 @@ def deleteAd(ad, user):
     removeAd
     print(removeAd)
     if removeAd:
+        return True
+    else:
+        return False
+
+def updateAd(ad, user):
+    """
+    Update an ad for the ID's user and ID's ad
+    """
+    print(ad)
+    updateValue = { "$set" : {
+        "text": ad["text"],
+        "image": ad["image"],
+        "url": ad["url"]
+    }}
+    updatingAd = dbAds.update_one({
+        "user" : str(user["_id"]),
+        "_id" : ObjectId(ad["_id"])
+    }, updateValue)
+    updatingAd
+    if updatingAd:
         return True
     else:
         return False
