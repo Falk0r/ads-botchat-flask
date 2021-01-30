@@ -1,11 +1,11 @@
-from flask import Flask, render_template, redirect, url_for, request, jsonify
+from flask import Flask, render_template, redirect, url_for, request, jsonify, send_from_directory
 from flask_cors import CORS
 import jwt
 from models.ads import getAllAds, addAd, deleteAd, updateAd
 from models.users import getAllUsers, findUser, addUser
 from controllers.auth import toLog, decode_auth_token
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="/")
 
 CORS(app, resources={r'/*': {'origins': '*'}})
 
@@ -162,7 +162,10 @@ def ads(current_user):
 		ads = getAllAds(id)
 		return jsonify(ads)
 
-
+# JS ROUTING
+@app.route('/js-customers/<path:path>')
+def send_js(path):
+	return send_from_directory('js-customers', path)
 
 if __name__ == '__main__':
 	app.run()
