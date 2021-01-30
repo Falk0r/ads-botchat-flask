@@ -26,7 +26,9 @@ def addAd(ad, user):
         "user" : str(user["_id"]),
         "text" : ad["text"],
         "image" : ad["image"],
-        "url" : ad["url"]
+        "url" : ad["url"],
+        "title" : ad["title"],
+        "status" : "pending"
     }).inserted_id
     newAd
     if newAd:
@@ -57,7 +59,9 @@ def updateAd(ad, user):
     updateValue = { "$set" : {
         "text": ad["text"],
         "image": ad["image"],
-        "url": ad["url"]
+        "url": ad["url"],
+        "title": ad["title"],
+        "status": ad["status"]
     }}
     updatingAd = dbAds.update_one({
         "user" : str(user["_id"]),
