@@ -57,8 +57,48 @@ chat_content.appendChild(img);
 const content = document.createElement('p');
 content.style.marginTop = "auto";
 content.style.marginBottom = "auto";
-content.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit auctor ex in faucibus. Sed quis hendrerit orci. Praesent facilisis lorem eget aliquet viverra. Aenean scelerisque tortor nec felis finibus, vitae fringilla magna aliquet. Donec euismod ipsum dui, ut consequat nunc volutpat eu."
+content.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
 chat_content.appendChild(content);
+
+const form = document.createElement('form');
+form.id = "form-ads-chatbot"
+form.style.display = "flex";
+form.style.flexDirection = "column";
+form.style.margin = "5px";
+form.style.height = "auto";
+form.style.width = "auto";
+chat_content.appendChild(form);
+
+const inputName = document.createElement('input');
+inputName.type = "text";
+inputName.name = "name";
+inputName.required = true;
+inputName.style.marginTop = "5px";
+inputName.style.width = "auto";
+inputName.placeholder = "Votre nom";
+
+form.appendChild(inputName);
+
+const inputMail = document.createElement('input');
+inputMail.type = "email";
+inputMail.name = "email";
+inputMail.required = true;
+inputMail.style.marginTop = "5px";
+inputMail.style.width = "auto";
+inputMail.placeholder = "Votre e-mail";
+
+form.appendChild(inputMail);
+
+const inputPhone = document.createElement('input');
+inputPhone.type = "phone";
+inputPhone.name = "phone";
+inputPhone.required = true;
+inputPhone.pattern = "[0-9]{10}";
+inputPhone.style.marginTop = "5px";
+inputPhone.style.width = "auto";
+inputPhone.placeholder = "Votre téléphone";
+
+form.appendChild(inputPhone);
 
 {/* <div class="group-bouton" style="display: flex; justify-content: space-around; align-items: center;" ></div> */}
 const group_button = document.createElement('div');
@@ -74,14 +114,16 @@ link.style.width = "45%"
 group_button.appendChild(link);
 
 const button_more = document.createElement('button');
-button_more.style.backgroundColor = "green";
+button_more.disabled = true;
+button_more.style.backgroundColor = "gray";
+button_more.style.cursor = "not-allowed"
 button_more.style.color = "white";
 button_more.style.boxShadow = "none";
 button_more.style.border = "1px solid green";
 button_more.style.height = "40px";
 button_more.style.width = "100%";
 button_more.style.borderRadius = "5px";
-button_more.innerHTML = "Voir plus";
+button_more.innerHTML = "Envoyer";
 link.appendChild(button_more);
 
 const button_close = document.createElement('button');
@@ -144,11 +186,28 @@ function toExpense() {
     minimize.style.display = 'none';
 }
 //Timing Trigger
-setTimeout(toExpense, 3000);
+setTimeout(toExpense, 1000);
 
-
-
-
-
-
-
+//form trigger
+form.addEventListener('input', () => {
+    const inputs = form.querySelectorAll('input');
+    check = true;
+    for (const input of inputs) {
+        console.log(input.validity.valid);
+        if (!input.validity.valid) {
+            check = false;
+            break;
+        }
+    }
+    if (check) {
+        button_more.disabled = false;
+        button_more.style.backgroundColor = "green";
+    } else {
+        button_more.disabled = true;
+        button_more.style.backgroundColor = "gray";
+    }
+})
+//SEND FORM
+button_more.addEventListener('click', (e)=>{
+    e.preventDefault();    
+})
