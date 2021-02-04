@@ -4,24 +4,44 @@ const body = document.querySelector("body");
 const bot_container = document.createElement("div");
 bot_container.style.display = "flex";
 bot_container.style.flexDirection = "column";
-bot_container.style.position = "absolute";
+bot_container.style.justifyContent = "center";
+bot_container.style.position = "fixed";
+bot_container.style.padding = "5px";
 bot_container.style.right = "10px";
 bot_container.style.bottom = "10px";
-bot_container.style.height = "200px";
-bot_container.style.width = "200px";
+bot_container.style.overflow = "hidden";
+bot_container.style.width = "50px";
+bot_container.style.height = "50px";
 bot_container.style.backgroundColor = "white";
 bot_container.style.border = "1px solid black";
-bot_container.style.borderRadius = "5px";
+bot_container.style.borderRadius = "100%";
 bot_container.style.zIndex = "9999999";
+bot_container.style.transition = "width 1s linear"
+
+const minimize = document.createElement('div');
+minimize.style.display = 'flex';
+minimize.style.height = '45px';
+minimize.style.width = '45px';
+minimize.style.margin = 'auto';
+minimize.style.fontSize = "30px";
+minimize.style.alignItems = "center";
+minimize.style.justifyContent = "center";
+minimize.style.cursor = "pointer";
+minimize.style.borderRadius = "100%";
+
+minimize.innerHTML = '⭐';
+bot_container.appendChild(minimize);
 
 
 const chat_content = document.createElement('div');
-chat_content.style.height = "150px";
+chat_content.style.maxHeight = "300px";
 chat_content.style.width = "190px";
+chat_content.style.overflow = "hidden";
 chat_content.style.backgroundColor = "white";
-chat_content.style.display = "block";
+chat_content.style.display = "none";
 chat_content.style.position = "relative";
 chat_content.style.marginTop = "5px";
+chat_content.style.marginBottom = "5px";
 chat_content.style.marginLeft = "5px";
 chat_content.style.textAlign = "center";
 bot_container.appendChild(chat_content);
@@ -37,12 +57,12 @@ chat_content.appendChild(img);
 const content = document.createElement('p');
 content.style.marginTop = "auto";
 content.style.marginBottom = "auto";
-content.innerHTML = "Offre Exclusive !!"
+content.innerHTML = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus blandit auctor ex in faucibus. Sed quis hendrerit orci. Praesent facilisis lorem eget aliquet viverra. Aenean scelerisque tortor nec felis finibus, vitae fringilla magna aliquet. Donec euismod ipsum dui, ut consequat nunc volutpat eu."
 chat_content.appendChild(content);
 
 {/* <div class="group-bouton" style="display: flex; justify-content: space-around; align-items: center;" ></div> */}
 const group_button = document.createElement('div');
-group_button.style.display = "flex";
+group_button.style.display = "none";
 group_button.style.justifyContent = "space-around";
 group_button.style.alignItems = "center";
 bot_container.appendChild(group_button);
@@ -78,8 +98,53 @@ group_button.appendChild(button_close);
 
 body.appendChild(bot_container);
 
+//STYLE HOVERS
+button_more.addEventListener('mouseover',(e) => {
+    button = e.target;
+    button.style.opacity = '60%';
+    button.style.cursor = 'pointer';
+});
+button_more.addEventListener( 'mouseleave' , (e) => {
+    button = e.target;
+    button.style.opacity = '100%';
+})
+button_close.addEventListener('mouseover', (e) => {
+    button = e.target;
+    button.style.opacity = '60%';
+    button.style.cursor = 'pointer';
+});
+button_close.addEventListener( 'mouseleave' , (e) => {
+    button = e.target;
+    button.style.opacity = '100%';
+});
 
-
+//Close triggers
+button_close.addEventListener('click', () =>{
+    toMinimize();
+})
+minimize.addEventListener('click', ()=>{
+    toExpense();
+})
+function toMinimize() {
+    bot_container.style.transition = '';
+    chat_content.style.display = 'none';
+    group_button.style.display = 'none';
+    bot_container.style.height = '50px';
+    bot_container.style.width = '50px';
+    bot_container.style.borderRadius = '100%';
+    minimize.style.display = 'flex';
+}
+function toExpense() {
+    bot_container.style.transition = "width 1s linear"
+    chat_content.style.display = 'block';
+    group_button.style.display = 'flex';
+    bot_container.style.height = '';
+    bot_container.style.width = '200px';
+    bot_container.style.borderRadius = '5px';
+    minimize.style.display = 'none';
+}
+//Timing Trigger
+setTimeout(toExpense, 3000);
 
 
 
