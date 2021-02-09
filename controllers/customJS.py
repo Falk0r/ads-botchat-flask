@@ -1,4 +1,4 @@
-def createDisplayJs(args = "OK GOOGLE"):
+def createDisplayJs(ad, newId):
     displayContent = """console.log(\"Welcome on Ads-chatBot\");
 const body = document.querySelector(\"body\");
 
@@ -48,7 +48,7 @@ chat_content.style.textAlign = \"center\";
 bot_container.appendChild(chat_content);
 
 const img = document.createElement('img');
-img.src=\"https://images-na.ssl-images-amazon.com/images/I/61c-sEkglwL._AC_SY355_.jpg\";
+img.src=\""""+ad["image"]+"""\";
 img.style.objectFit = \"contain\";
 img.style.height= \"100px\";
 chat_content.appendChild(img);
@@ -56,7 +56,7 @@ chat_content.appendChild(img);
 const content = document.createElement('p');
 content.style.marginTop = \"auto\";
 content.style.marginBottom = \"auto\";
-content.innerHTML = \""""+args+"""\";
+content.innerHTML = \""""+ad["text"]+"""\";
 chat_content.appendChild(content);
 
 const group_button = document.createElement('div');
@@ -66,7 +66,7 @@ group_button.style.alignItems = \"center\";
 bot_container.appendChild(group_button);
 
 const link = document.createElement('a');
-link.href = \"http://127.0.0.1:5000/\";
+link.href = \""""+ad["url"]+"""\";
 link.style.width = \"45%\"
 group_button.appendChild(link);
 
@@ -143,10 +143,7 @@ function toExpense() {
 //Timing Trigger
 setTimeout(toExpense, 3000);"""
 
-    f = open('./js-customers/myfile.js', 'x')
+    f = open(f'./js-customers/{newId}.js', 'x')
     f.write(displayContent)
     f.close()
     pass
-
-print('on créer')
-createDisplayJs()

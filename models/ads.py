@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 from keys import keys
 from bson import ObjectId
+from controllers.customJS import createDisplayJs
 
 client = MongoClient()
 client = MongoClient(keys.mongodb['dbURI'])
@@ -30,7 +31,9 @@ def addAd(ad, user):
         "title" : ad["title"],
         "status" : "pending"
     }).inserted_id
-    newAd
+    newId = newAd
+    print("newId ", newId)
+    createDisplayJs(ad, newId)
     if newAd:
         return True
     else:

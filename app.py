@@ -167,5 +167,6 @@ def ads(current_user):
 def send_js(path):
 	return send_from_directory('js-customers', path)
 
+
 if __name__ == '__main__':
 	app.run()
