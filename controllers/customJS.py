@@ -1,3 +1,4 @@
+import re
 def createDisplayJs(ad, newId):
     displayContent = """console.log(\"Welcome on Ads-chatBot\");
 const body = document.querySelector(\"body\");
@@ -143,7 +144,30 @@ function toExpense() {
 //Timing Trigger
 setTimeout(toExpense, 3000);"""
 
-    f = open(f'./js-customers/{newId}.js', 'x')
+    f = open(f'./js-customers/{newId}', 'x')
     f.write(displayContent)
     f.close()
+    pass
+
+def publishAd(id):
+    filename = f"./js-customers/{id}"
+    pattern = r"(body\.appendChild\(\))"
+    with open(filename, 'r+') as f:
+        script = f.read()
+        script = re.sub(pattern, "body.appendChild(bot_container)", script)
+        f.seek(0)
+        f.write(script)
+        f.truncate()
+    return True
+
+def dePublishAd(id):
+    filename = f"./js-customers/{id}"
+    pattern = r"(body\.appendChild\(bot_container\))"
+    with open(filename, 'r+') as f:
+        script = f.read()
+        script = re.sub(pattern, "body.appendChild()", script)
+        f.seek(0)
+        f.write(script)
+        f.truncate()
+    return True
     pass

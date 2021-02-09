@@ -1,3 +1,6 @@
 __pycache__
 ads-botchat-env
 keys.py
+js-customers/*
+!js-customers/display.js
+!js-customers/form.js

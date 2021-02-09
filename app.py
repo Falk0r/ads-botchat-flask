@@ -4,6 +4,7 @@ import jwt
 from models.ads import getAllAds, addAd, deleteAd, updateAd
 from models.users import getAllUsers, findUser, addUser
 from controllers.auth import toLog, decode_auth_token
+from controllers.customJS import publishAd
 
 app = Flask(__name__, static_url_path="/")
 
@@ -161,6 +162,15 @@ def ads(current_user):
 		id = str(current_user['_id'])
 		ads = getAllAds(id)
 		return jsonify(ads)
+
+@app.route('/api/ads/<idAd>/publish', methods=['GET'])
+def publish(idAd):
+	publishing = publishAd(idAd)
+	if publishing:
+		return jsonify({'message' : 'Ad published !'})
+	else:
+		return jsonify({'message' : 'Ad not published !'}), 500
+
 
 # JS ROUTING
 @app.route('/js-customers/<path:path>')
