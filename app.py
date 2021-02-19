@@ -1,10 +1,10 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, send_from_directory
 from flask_cors import CORS
 import jwt
-from models.ads import getAllAds, addAd, deleteAd, updateAd
+from models.ads import getAllAds, addAd, deleteAd, updateAd, getAd
 from models.users import getAllUsers, findUser, addUser
 from controllers.auth import toLog, decode_auth_token
-from controllers.customJS import publishAd
+from controllers.customJS import publishAd, dePublishAd
 
 app = Flask(__name__, static_url_path="/")
 
@@ -163,14 +163,39 @@ def ads(current_user):
 		ads = getAllAds(id)
 		return jsonify(ads)
 
-@app.route('/api/ads/<idAd>/publish', methods=['GET'])
-def publish(idAd):
-	publishing = publishAd(idAd)
-	if publishing:
-		return jsonify({'message' : 'Ad published !'})
+@app.route('/publish', methods=['GET', 'POST'])
+def publish():
+	print()
+	if request.method == 'GET':
+		return jsonify({'message' : 'GET ROUTE'})
 	else:
-		return jsonify({'message' : 'Ad not published !'}), 500
+		ad = request.get_json()
+		print(ad)
+		publishing = publishAd(ad)
+		if publishing:
+			user = {}
+			user["_id"] = ad['user']
+			updatedAd = updateAd(ad, user)
+			return jsonify({'message' : 'Ad published !'})
+		else:
+			return jsonify({'message' : 'Ad not published !'}), 500
 
+@app.route('/depublish', methods=['GET', 'POST'])
+def depublish():
+	print()
+	if request.method == 'GET':
+		return jsonify({'message' : 'GET ROUTE'})
+	else:
+		ad = request.get_json()
+		print(ad)
+		dePublishing = dePublishAd(ad)
+		if dePublishing:
+			user = {}
+			user["_id"] = ad['user']
+			updatedAd = updateAd(ad, user)
+			return jsonify({'message' : 'Ad unpublished !'})
+		else:
+			return jsonify({'message' : 'Ad not unpublished !'}), 500
 
 # JS ROUTING
 @app.route('/js-customers/<path:path>')

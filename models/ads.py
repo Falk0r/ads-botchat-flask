@@ -19,6 +19,13 @@ def getAllAds(id):
         ad['_id'] = str(ad['_id'])
     return ads
 
+def getAd(id):
+    """
+    Get Ad from Id
+    """
+    ad = dbAds.find_one({"_id" : id})
+    return ad
+
 def addAd(ad, user):
     """
     Add an ad for the ID's user

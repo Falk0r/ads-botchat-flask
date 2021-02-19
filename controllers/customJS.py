@@ -1,5 +1,10 @@
 import re
+from bson import ObjectId
+
 def createDisplayJs(ad, newId):
+    '''
+    Call by ads.py
+    '''
     displayContent = """console.log(\"Welcome on Ads-chatBot\");
 const body = document.querySelector(\"body\");
 
@@ -94,7 +99,10 @@ button_close.innerHTML = \"Fermer\";
 button_close.id = \"close-adbotchat\";
 group_button.appendChild(button_close);
 
-body.appendChild(bot_container);
+try {
+    body.appendChild();
+} catch (error) {
+}
 
 //STYLE HOVERS
 button_more.addEventListener('mouseover',(e) => {
@@ -149,7 +157,8 @@ setTimeout(toExpense, 3000);"""
     f.close()
     pass
 
-def publishAd(id):
+def publishAd(ad):
+    id = str(ad['_id'])
     filename = f"./js-customers/{id}"
     pattern = r"(body\.appendChild\(\))"
     with open(filename, 'r+') as f:
@@ -160,7 +169,8 @@ def publishAd(id):
         f.truncate()
     return True
 
-def dePublishAd(id):
+def dePublishAd(ad):
+    id = str(ad['_id'])
     filename = f"./js-customers/{id}"
     pattern = r"(body\.appendChild\(bot_container\))"
     with open(filename, 'r+') as f:
