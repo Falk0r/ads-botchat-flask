@@ -1,6 +1,7 @@
 from flask import Flask, render_template, redirect, url_for, request, jsonify, send_from_directory
 from flask_cors import CORS
 import jwt
+from functools import wraps
 from models.ads import getAllAds, addAd, deleteAd, updateAd, getAd
 from models.users import getAllUsers, findUser, addUser
 from controllers.auth import toLog, decode_auth_token
@@ -102,7 +103,7 @@ def login():
 
 # Token Decorator for api routes
 def token_required(f):
-    # @wraps(f)
+    @wraps(f)
     def _verify(*args, **kwargs):
         auth_headers = request.headers.get('Authorization', '').split()
 
@@ -163,8 +164,9 @@ def ads(current_user):
 		ads = getAllAds(id)
 		return jsonify(ads)
 
-@app.route('/publish', methods=['GET', 'POST'])
-def publish():
+@app.route('/api/publish', methods=['GET', 'POST'])
+@token_required
+def publish(current_user):
 	print()
 	if request.method == 'GET':
 		return jsonify({'message' : 'GET ROUTE'})
@@ -180,7 +182,7 @@ def publish():
 		else:
 			return jsonify({'message' : 'Ad not published !'}), 500
 
-@app.route('/depublish', methods=['GET', 'POST'])
+@app.route('/api/depublish', methods=['GET', 'POST'])
 def depublish():
 	print()
 	if request.method == 'GET':
