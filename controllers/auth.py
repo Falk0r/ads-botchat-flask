@@ -37,6 +37,7 @@ def decode_auth_token(token):
     """
     Decode and return payload from token
     """
+    print(token)
     try:
         return jwt.decode(
             token,

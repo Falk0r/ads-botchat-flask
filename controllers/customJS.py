@@ -2,6 +2,7 @@ import re
 from bson import ObjectId
 
 def createDisplayJs(ad, newId):
+    print("custom js : ", ad, newId)
     '''
     Call by ads.py
     '''
@@ -72,7 +73,7 @@ group_button.style.alignItems = \"center\";
 bot_container.appendChild(group_button);
 
 const link = document.createElement('a');
-link.href = \""""+ad["url"]+"""\";
+link.href = \""""+str(ad["link"])+"""\";
 link.style.width = \"45%\"
 group_button.appendChild(link);
 

@@ -1,7 +1,6 @@
 from pymongo import MongoClient
 from keys import keys
 from bson import ObjectId
-from controllers.customJS import createDisplayJs
 
 client = MongoClient()
 client = MongoClient(keys.mongodb['dbURI'])
@@ -31,18 +30,18 @@ def addAd(ad, user):
     Add an ad for the ID's user
     """
     newAd = dbAds.insert_one({
-        "user" : str(user["_id"]),
-        "text" : ad["text"],
+        "user"  : str(user["_id"]),
+        "text"  : ad["text"],
         "image" : ad["image"],
-        "url" : ad["url"],
+        "url"   : ad["url"],
         "title" : ad["title"],
-        "status" : "pending"
+        "status": "pending",
+        "link"  : str(ad["link"])
     }).inserted_id
     newId = newAd
     print("newId ", newId)
-    createDisplayJs(ad, newId)
     if newAd:
-        return True
+        return newId
     else:
         return False
 
@@ -51,8 +50,8 @@ def deleteAd(ad, user):
     Delete an ad for the ID's user and ID's ad
     """
     removeAd = dbAds.delete_one({
-        "user" : str(user["_id"]),
-        "_id" : ObjectId(ad)
+        "user"  : str(user["_id"]),
+        "_id"   : ObjectId(ad)
     })
     removeAd
     print(removeAd)
@@ -67,11 +66,11 @@ def updateAd(ad, user):
     """
     print(ad)
     updateValue = { "$set" : {
-        "text": ad["text"],
-        "image": ad["image"],
-        "url": ad["url"],
-        "title": ad["title"],
-        "status": ad["status"]
+        "text"  : ad["text"],
+        "image" : ad["image"],
+        "url"   : ad["url"],
+        "title" : ad["title"],
+        "status": ad["status"],
     }}
     updatingAd = dbAds.update_one({
         "user" : str(user["_id"]),
