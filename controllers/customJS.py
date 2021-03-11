@@ -73,7 +73,7 @@ group_button.style.alignItems = \"center\";
 bot_container.appendChild(group_button);
 
 const link = document.createElement('a');
-link.href = \""""+str(ad["link"])+"""\";
+link.href = \"http://127.0.0.1:5000/link/"""+str(ad["link"])+"""\";
 link.style.width = \"45%\"
 group_button.appendChild(link);
 
